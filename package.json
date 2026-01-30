@@ -1,0 +1,44 @@
+{
+  "name": "student-management-system",
+  "version": "1.0.0",
+  "description": "Student Management System with React frontend and Node.js backend",
+  "main": "server/index.js",
+  "scripts": {
+    "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "server": "nodemon server/index.js",
+    "server-prisma": "nodemon server/index-prisma.js",
+    "client": "cd client && npm start",
+    "build": "cd client && npm run build",
+    "install-all": "npm install && cd client && npm install",
+    "db:seed": "node prisma/seed.js",
+    "db:migrate": "npx prisma migrate dev",
+    "db:generate": "npx prisma generate"
+  },
+  "dependencies": {
+    "@prisma/client": "^7.2.0",
+    "bcryptjs": "^2.4.3",
+    "chart.js": "^4.5.1",
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "express-validator": "^7.0.1",
+    "jsonwebtoken": "^9.0.2",
+    "multer": "^2.0.2",
+    "pg": "^8.11.3",
+    "prisma": "^7.2.0",
+    "react-chartjs-2": "^5.3.1"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2",
+    "nodemon": "^3.0.1"
+  },
+  "keywords": [
+    "student",
+    "management",
+    "react",
+    "node",
+    "postgresql"
+  ],
+  "author": "",
+  "license": "MIT"
+}

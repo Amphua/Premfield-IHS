@@ -1,0 +1,69 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id           Int      @id @default(autoincrement())
+  username     String   @unique @db.VarChar(50)
+  email        String   @unique @db.VarChar(100)
+  passwordHash String   @map("password_hash") @db.VarChar(255)
+  role         Role
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  @@map("users")
+}
+
+model Student {
+  id          Int      @id @default(autoincrement())
+  fullName     String   @map("full_name") @db.VarChar(100)
+  dateOfBirth  DateTime @map("date_of_birth") @db.Date
+  class       String   @db.VarChar(50)
+  status       StudentStatus
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  studentTerms StudentTerm[]
+
+  @@index([class])
+  @@index([status])
+  @@map("students")
+}
+
+model StudentTerm {
+  id            Int      @id @default(autoincrement())
+  studentId     Int      @map("student_id")
+  termNumber     Int      @map("term_number")
+  attendance    Int
+  academicScore Int      @map("academic_score")
+  remarks       String?  @db.Text
+  createdAt     DateTime @default(now()) @map("created_at")
+  updatedAt     DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  student Student @relation(fields: [studentId], references: [id], onDelete: Cascade)
+
+  @@unique([studentId, termNumber])
+  @@index([studentId])
+  @@index([termNumber])
+  @@map("student_terms")
+}
+
+enum Role {
+  admin
+  teacher
+}
+
+enum StudentStatus {
+  active
+  inactive
+  graduated
+}
