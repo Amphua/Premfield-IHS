@@ -73,7 +73,7 @@ const UserManagement = () => {
   };
 
   const getRoleBadgeClass = (role) => {
-    return role === 'admin' ? 'badge-danger' : 'badge-success';
+    return role === 'admin' ? 'badge-admin' : 'badge-teacher';
   };
 
   if (loading) {

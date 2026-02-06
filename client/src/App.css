@@ -335,6 +335,7 @@ body {
   text-transform: uppercase;
 }
 
+/* General badge classes (for status, gender, etc.) */
 .badge-success {
   background-color: #d4edda;
   color: #155724;
@@ -348,6 +349,16 @@ body {
 .badge-danger {
   background-color: #f8d7da;
   color: #721c24;
+}
+
+.badge-secondary {
+  background-color: #e2e3e5;
+  color: #383d41;
+}
+
+.badge-primary {
+  background-color: #cce5ff;
+  color: #004085;
 }
 
 /* Responsive Design */

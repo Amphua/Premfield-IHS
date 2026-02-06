@@ -1,0 +1,69 @@
+# Podman Compose configuration (alternative to Docker)
+services:
+  # PostgreSQL Database
+  postgres:
+    image: postgres:15-alpine
+    container_name: student-management-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: student_management
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ilhamx019
+      POSTGRES_INITDB_ARGS: "--encoding=UTF-8 --lc-collate=C --lc-ctype=C"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./database/setup-complete-database.sql:/docker-entrypoint-initdb.d/01-schema.sql
+      - ./database/create-mock-data.sql:/docker-entrypoint-initdb.d/02-mock-data.sql
+    ports:
+      - "5432:5432"
+    networks:
+      - app-network
+
+  # Backend API
+  backend:
+    build:
+      context: .
+      target: backend
+    container_name: student-management-api
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_NAME: student_management
+      DB_USER: postgres
+      DB_PASSWORD: ilhamx019
+      DATABASE_URL: "postgresql://postgres:ilhamx019@postgres:5432/student_management?sslmode=disable"
+      JWT_SECRET: 5c15e4c1015a7f219d4dffd306b9881afd3ae55d8cf61b0e0de68c1678455205d91df81af0e5c5dd6d0304592f72df9b82e5ca4cb0c0844dbc4d080001914eb0
+      JWT_EXPIRES_IN: 24h
+      PORT: 5000
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./server/uploads:/app/server/uploads
+    depends_on:
+      - postgres
+    networks:
+      - app-network
+
+  # Frontend
+  frontend:
+    build:
+      context: .
+      target: production
+    container_name: student-management-web
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+    networks:
+      - app-network
+
+volumes:
+  postgres_data:
+    driver: local
+
+networks:
+  app-network:
+    driver: bridge
